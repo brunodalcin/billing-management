@@ -18,7 +18,7 @@ type
   private
     { Private declarations }
 
-    procedure LoginFirebase(const email, password: string);
+    function LoginFirebase(const email, password: string) : boolean;
 //    function GetApiKey: string;
   public
     { Public declarations }
@@ -29,6 +29,8 @@ var
 
 implementation
 
+uses UFrmProcessMenu;
+
 {$R *.dfm}
 
 {function TfrmProcessLogin.GetAPIKey: string;
@@ -38,10 +40,16 @@ end;}
 
 procedure TfrmProcessLogin.btnLoginClick(Sender: TObject);
 begin
-  LoginFirebase(edEmail.Text,edPassword.Text);
+
+  if LoginFirebase(edEmail.Text,edPassword.Text) then begin
+    if not Assigned(frmProcessMenu) then
+      frmProcessMenu := TfrmProcessMenu.Create(Self);
+
+    frmProcessMenu.ShowModal;
+  end;
 end;
 
-procedure TfrmProcessLogin.LoginFirebase(const email, password:string);
+function TfrmProcessLogin.LoginFirebase(const email, password:string) : boolean;
 var
   client: TNetHTTPClient;
   response: IHTTPResponse;
@@ -49,6 +57,7 @@ var
   APIKey, URL: string;
   jsonData: TStringStream;
 begin
+  Result := False;
   //APIKey := GetAPIKey;
   APIKey := 'firebase api key';
   if APIKey = '' then
@@ -71,8 +80,10 @@ begin
      if Assigned(jsonResponse) then
      begin
        try
-         if jsonResponse.TryGetValue('idToken', APIKey) then
-           ShowMessage('successfuly logged! Token: ' + APIKey)
+         if jsonResponse.TryGetValue('idToken', APIKey) then begin
+           ShowMessage('successfuly logged! Token: ' + APIKey);
+           Result := True;
+         end
          else
            ShowMessage('error..: ' + Response.ContentAsString);
 

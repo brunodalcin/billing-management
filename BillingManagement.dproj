@@ -127,6 +127,10 @@
             <Form>frmProcessLogin</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UFrmProcessMenu.pas">
+            <Form>frmProcessMenu</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
